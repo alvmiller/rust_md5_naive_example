@@ -23,7 +23,7 @@ const RCNT: [u32; 64] = [
 #[inline(always)]
 fn bit_padding(input: &str) -> Vec<u8> {
     let mut input_vector: Vec<u8> = convert_str_to_vec(input);
-    let bit_length: u64 = (input.len() as u64) * 8u64; // todo - add support for > 2^64 bit size
+    let bit_length: u64 = (input.len() as u64) * 8u64;
 
     input_vector.push(128_u8);
     while (input_vector.len() * 8) % 512 != 448 {
@@ -40,7 +40,7 @@ fn bit_padding(input: &str) -> Vec<u8> {
 fn split_u64_to_u8_array(s: u64) -> [u8; 8] {
     let u8_array = [
         s as u8,
-        (s >> 8) as u8,
+        (s >>  8) as u8,
         (s >> 16) as u8,
         (s >> 24) as u8,
         (s >> 32) as u8,
@@ -48,6 +48,7 @@ fn split_u64_to_u8_array(s: u64) -> [u8; 8] {
         (s >> 48) as u8,
         (s >> 56) as u8,
     ];
+
     return u8_array;
 }
 
@@ -60,8 +61,9 @@ fn convert_str_to_vec(input: &str) -> Vec<u8> {
 
 #[inline(always)]
 fn vec_to_array<T, const N: usize>(v: Vec<T>) -> [T; N] {
-    v.try_into()
-        .unwrap_or_else(|_v: Vec<T>| panic!("error converting vector to array - sizes don't match"))
+    v.try_into().unwrap_or_else(
+        |_v: Vec<T>| panic!("Can't convert vector to array (sizes don't match)")
+    )
 }
 
 #[inline(always)]
@@ -82,6 +84,7 @@ fn convert_u8_chunk_to_u32(chunk: &mut [u8]) -> Vec<u32> {
             temporary_vec.clear();
         }
     }
+
     return x;
 }
 
